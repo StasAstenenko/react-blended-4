@@ -6,13 +6,18 @@ import {
   Form,
   TodoList,
   Filter,
+  EditForm,
 } from 'components';
 import { useEffect } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { fetchAllTodos } from 'reduxTodo/operations';
+import { selectSelectedTodo, selectTodos } from 'reduxTodo/slice';
 
 export const App = () => {
   const dispatch = useDispatch();
+  const todos = useSelector(selectTodos);
+  const selectedTodo = useSelector(selectSelectedTodo);
+
   useEffect(() => {
     dispatch(fetchAllTodos());
   }, [dispatch]);
@@ -22,10 +27,13 @@ export const App = () => {
       <Header />
       <Section>
         <Container>
-          <Text textAlign="center">Create your first todo😉</Text>
-          <Form />
+          {!selectedTodo ? <Form /> : <EditForm />}
           <Filter />
-          <TodoList />
+          {todos.length ? (
+            <TodoList />
+          ) : (
+            <Text textAlign="center">Create your first todo😉</Text>
+          )}
         </Container>
       </Section>
     </>
